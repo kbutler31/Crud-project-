@@ -8,7 +8,7 @@ const {users, setUsers} = useState([{}])
 
 const {newUserName, setNewUserName} = useState('')
 const {newUserAddress, setNewUserAddress} = useState('')
-const {newUserposition, setNewUserPosition} = useState('')
+const {newUserPosition, setNewUserPosition} = useState('')
 
 
 const {updatedName, setUpdatedName} = useState('')
@@ -33,11 +33,10 @@ fetch(`${MOCK_API_URL}/${id}`, {
 function updateUser(e,userObject) {
 e.preventDefault()
 
-  let updatedUserObject = (
-    userObject
-    name: updatedName,
-    address: updatedAddress,
-    position: updatedPosition)
+  let updatedUserObject = {
+    ...userObject}
+    
+    
     
 
   
@@ -63,7 +62,7 @@ e.preventDefault()
     body: JSON.stringify({
       name: newUserName,
       address: newUserAddress,
-      position: newUserposition
+      position: newUserPosition
     
 })
   }).then(() => getUsers())
@@ -71,40 +70,41 @@ e.preventDefault()
 
   return
 
-    <div className="App">
-      <div>
-      <form>
+<div className="App">
+    <>
+    <form>
         <h3>Post new user form</h3>
         <label>Name</label>
-        <input onchange = {(e) => setNewUserName(e.target.value)}></input>
+        <input onChange={(e) => setNewUserName(e.target.value)}></input>
         <label>Address</label>
-        <input onchange = {(e) => setNewUserAddress(e.target.value)}></input>
+        <input onChange={(e) => setNewUserAddress(e.target.value)}></input>
         <label>Position</label>
-        <input onchange = {(e) => setNewUserPosition(e.target.value)}></input>
+        <input onChange={(e) => setNewUserPosition(e.target.value)}></input>
         <button onClick={(e) => postNewUser(e)}>Submit</button>
-      </form>
+    </form>
+    </>
+</div>
 
-    {users.map((users, index) => (
-      <div key={index} className="user">
-        <div>Name: {users.name}</div><br></br>
-        <div>Address: {users.address}</div><br></br>
-        <div>Position: {users.position}</div><br></br>
-        <button onClick={() => deleteUser(users.id)}>Delete</button>
-      </div>
-      </div>
-      <form>
-        <h3>Update user form</h3>
-        <label>Name</label>
-        <input onchange = {(e) => setUpdatedName(e.target.value)}></input>
-        <label>Address</label>
-        <input onchange = {(e) => setUpdatedAddress(e.target.value)}></input>
-        <label>Position</label>
-        <input onchange = {(e) => setUpdatedPosition(e.target.value)}></input>
-        <button onClick={() => updateUser(e,users)}>Submit</button>
-      </form>
-      
+    {users.map((user, index) => (
+        <div key={index}>
+            <div className="user">
+                <div>Name: {user.name}</div><br></br>
+                <div>Address: {user.address}</div><br></br>
+                <div>Position: {user.position}</div><br></br>
+                <button onClick={() => deleteUser(user.id)}>Delete</button>
+            </div>
+            <form>
+                <h3>Update user form</h3>
+                <label>Name</label>
+                <input onChange={(e) => setUpdatedName(e.target.value)}></input>
+                <label>Address</label>
+                <input onChange={(e) => setUpdatedAddress(e.target.value)}></input>
+                <label>Position</label>
+                <input onChange={(e) => setUpdatedPosition(e.target.value)}></input>
+                <button onClick={() => updateUser(user)}>Submit</button>
+            </form>
+        </div>
     ))}
-    </div>
   
 }
 
