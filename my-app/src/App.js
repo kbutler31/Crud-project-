@@ -30,30 +30,41 @@ fetch(MOCK_API_URL + '/' + id, {
 })
 }
 
-function updateUser(e,userObject) {
-e.preventDefault()
+function updateUser(e, userObject) {
+  e.preventDefault(); // Prevent default form submission (if applicable)
 
-  let updatedUserObject = {
-    ...userObject}
-    
-    
-    
+  // Deep copy of userObject if necessary
+  let updatedUserObject = JSON.parse(JSON.stringify(userObject));
 
-  
-
-fetch('${MOCK_API_URL}/${userObject.id}', {
-  method: 'PUT',
-  body: JSON.stringify(),
-  headers: {
-    'Content-Type': 'application/json'
-  }
-}).then(() => getUsers())
-
+  fetch(`${MOCK_API_URL}/${userObject.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      name: updatedUserObject.name,
+      address: updatedUserObject.address,
+      position: updatedUserObject.position
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(() => {
+    getUsers(); // Refresh the user list after successful update
+  })
+  .catch(error => {
+    console.error('Error updating user:', error);
+  });
 }
+
 
 function postNewUser(e) {
 e.preventDefault()
-   
+
   fetch(MOCK_API_URL, {
     method: 'POST',
     headers: {
@@ -73,6 +84,7 @@ e.preventDefault()
 } ])
 })
 }
+
   return (
 <>
 <div className="App">
@@ -107,7 +119,7 @@ e.preventDefault()
                 <input onChange={(e) => setUpdatedAddress(e.target.value)}></input>
                 <label>Position</label>
                 <input onChange={(e) => setUpdatedPosition(e.target.value)}></input>
-                <button onClick={() => updateUser(user)}>Submit</button>
+                <button onClick={(e) => updateUser(user)}>Submit</button>
             </form>
         </div>
       )
