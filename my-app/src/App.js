@@ -30,37 +30,25 @@ fetch(MOCK_API_URL + '/' + id, {
 })
 }
 
-function updateUser(e, userObject) {
-  e.preventDefault(); // Prevent default form submission (if applicable)
+function updateUser(e,userObject) {
+e.preventDefault()
 
-  // Deep copy of userObject if necessary
-  let updatedUserObject = JSON.parse(JSON.stringify(userObject));
+  let updatedUserObject = {
+    ...userObject}
+    
 
-  fetch(`${MOCK_API_URL}/${userObject.id}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-      name: updatedUserObject.name,
-      address: updatedUserObject.address,
-      position: updatedUserObject.position
-    }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(() => {
-    getUsers(); // Refresh the user list after successful update
-  })
-  .catch(error => {
-    console.error('Error updating user:', error);
-  });
+fetch('${MOCK_API_URL}/${userObject.id}', {
+  method: 'PUT',
+  body: JSON.stringify({
+    name: updatedUserObject.name,
+    address: updatedUserObject.address,
+    position: updatedUserObject.position}),
+  headers: {
+    'Content-Type': 'application/json'
+  }
+}).then(() => getUsers())
+
 }
-
 
 function postNewUser(e) {
 e.preventDefault()
