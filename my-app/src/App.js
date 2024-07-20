@@ -2,28 +2,28 @@ import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 function App() {
-const MOCK_API_URL = 'https://6695de320312447373c04622.mockapi.io/:endpoint'
+const MOCK_API_URL = 'https://6695de320312447373c04622.mockapi.io/users'
 
-const {users, setUsers} = useState([{}])
+const [users, setUsers] = useState([{}])
 
-const {newUserName, setNewUserName} = useState('')
-const {newUserAddress, setNewUserAddress} = useState('')
-const {newUserPosition, setNewUserPosition} = useState('')
+const [newUserName, setNewUserName] = useState('')
+const [newUserAddress, setNewUserAddress] = useState('')
+const [newUserPosition, setNewUserPosition] = useState('')
 
 
-const {updatedName, setUpdatedName} = useState('')
-const {updatedAddress, setUpdatedAddress} = useState('')
-const {updatedPosition, setUpdatedPosition} = useState('')
-
+const [updatedName, setUpdatedName] = useState('')
+const [updatedAddress, setUpdatedAddress] = useState('')
+const [updatedPosition, setUpdatedPosition] = useState('')
 function getUsers() {
   fetch(MOCK_API_URL)
     .then(data => data.json())
     .then(data => setUsers(data))
 }
-useEffect(getUsers, [])
-
+useEffect(() => {
+  getUsers();
+},[]);
 function deleteUser(id) {
-fetch(`${MOCK_API_URL}/${id}`, {
+fetch(MOCK_API_URL + '/' + id, {
   method: 'DELETE'
 }).then(() => {
   getUsers()
@@ -65,11 +65,16 @@ e.preventDefault()
       position: newUserPosition
     
 })
-  }).then(() => getUsers())
+  }).then(() => {setUsers([...users,{
+    name: newUserName,
+    address: newUserAddress,
+    position: newUserPosition
+  
+} ])
+})
 }
-
-  return
-
+  return (
+<>
 <div className="App">
     <>
     <form>
@@ -84,8 +89,9 @@ e.preventDefault()
     </form>
     </>
 </div>
-
-    {users.map((user, index) => (
+  
+    {users.map((user, index) => {
+      return (
         <div key={index}>
             <div className="user">
                 <div>Name: {user.name}</div><br></br>
@@ -104,8 +110,10 @@ e.preventDefault()
                 <button onClick={() => updateUser(user)}>Submit</button>
             </form>
         </div>
-    ))}
-  
+      )
+    })}
+    </> 
+  );
 }
 
 export default App;
